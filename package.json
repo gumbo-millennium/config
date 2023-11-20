@@ -1,0 +1,27 @@
+{
+  "name": "@gumbo-millennium/eslint-config",
+  "description": "Various configurations for Gumbo Millennium",
+  "version": "1.0.0",
+  "license": "GPL-3.0",
+  "main": "index.js",
+  "scripts": {
+    "format": "eslint --fix .",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@tailwindcss/aspect-ratio": "^0.4.2",
+    "@tailwindcss/forms": "^0.5.7",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-vue": "^9.18.1",
+    "prettier": "^3.1.0",
+    "stylelint-config-standard": "^34.0.0",
+    "tailwindcss": "^3.3.5"
+  },
+  "eslintConfig": {
+    "extends": [
+      "prettier",
+      "airbnb-base"
+    ]
+  }
+}
