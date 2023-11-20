@@ -24,3 +24,10 @@ jobs:
 
       - name: Run linter
         run: npm run lint
+
+      - name: Test Tailwind
+        working-directory: test
+        run: |
+          npm install
+          npm run lint
+          npm run build

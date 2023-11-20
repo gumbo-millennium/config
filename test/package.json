@@ -1,0 +1,16 @@
+{
+  "name": "@gumbo-millennium/config-test",
+  "private": true,
+  "scripts": {
+    "lint": "eslint --fix .",
+    "build": "npx tailwindcss -i ./src/style.css -o ./dist/output.css"
+  },
+  "devDependencies": {
+    "@gumbo-millennium/eslint-config": "file:../"
+  },
+  "eslintConfig": {
+    "extends": [
+      "@gumbo-millennium/eslint-config"
+    ]
+  }
+}
