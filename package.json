@@ -9,6 +9,7 @@
     "lint": "eslint ."
   },
   "files": [
+    "src/",
     "index.js",
     "tailwind.js",
     "stylelint.js"
