@@ -2,6 +2,9 @@ on:
   push:
     branches:
       - main
+    tags:
+      - v*
+
   pull_request:
 
 jobs:
@@ -11,10 +14,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Setup NodeJS
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
           node-version: 'lts/*'
           cache: 'npm'
@@ -31,3 +34,37 @@ jobs:
           npm install
           npm run lint
           npm run build
+
+      - name: Package application
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          # Load version from Git
+          npm version --allow-same-version --no-git-tag-version from-git
+
+          # Set as env
+          export NODE_PKG_VERSION=$( jq -r '.version' package.json )
+          echo "NODE_PKG_VERSION=${NODE_PKG_VERSION}" >> $GITHUB_ENV
+
+          # Build and package
+          npm pack
+          mv *.tgz gumbo-millennium-eslint-config.tgz
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/v')
+        with:
+          name: Version ${{ env.NODE_PKG_VERSION }}
+          files: gumbo-millennium-eslint-config.tgz
+          generate_release_notes: true
+          body: |
+            This package contains the configuration for the Gumbo Millennium ESLint rules version ${{ env.NODE_PKG_VERSION }}.
+
+            To install this in your project, add the following to your `package.json`
+
+            ```bash
+            "devDependencies": {
+                "@${{ github.repository }}": "${{ github.server_url }}/${{ github.repository }}/releases/download/v${{ env.NODE_PKG_VERSION }}/gumbo-millennium-eslint-config.tgz"
+            }
+            ```
+
+            ---
