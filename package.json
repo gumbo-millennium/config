@@ -1,8 +1,12 @@
 {
   "name": "@gumbo-millennium/eslint-config",
   "description": "Various configurations for Gumbo Millennium",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "license": "GPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gumbo-millennium/eslint-config.git"
+  },
   "main": "index.js",
   "scripts": {
     "format": "eslint --fix .",

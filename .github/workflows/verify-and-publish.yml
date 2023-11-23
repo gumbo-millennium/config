@@ -1,0 +1,78 @@
+name: Verify and publish
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - v*
+
+  pull_request:
+
+jobs:
+  verify:
+    name: Verify
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup NodeJS
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linter
+        run: npm run lint
+
+      - name: Test Tailwind
+        working-directory: test
+        run: |
+          npm install
+          npm run lint
+          npm run build
+
+  publish:
+    name: Publish
+    runs-on: ubuntu-latest
+
+    needs: verify
+    if: startsWith(github.ref, 'refs/tags/v')
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup NodeJS
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          cache: 'npm'
+
+      - name: Configure GitHub Packages registry
+        run: |
+          echo "@gumbo-millennium:registry=https://npm.pkg.github.com" > .npmrc
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" > .npmrc
+
+      - name: Set package version from Git
+        run: npm version --allow-same-version --no-git-tag-version from-git
+
+      - name: Publish NPM package
+        run: npm publish
+
+      - name: Package application
+        run: |
+          npm pack
+          mv *.tgz gumbo-millennium-eslint-config.tgz
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/v')
+        with:
+          files: gumbo-millennium-eslint-config.tgz
+          generate_release_notes: true
