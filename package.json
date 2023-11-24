@@ -5,7 +5,7 @@
   "license": "GPL-3.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/gumbo-millennium/eslint-config.git"
+    "url": "git+https://github.com/gumbo-millennium/eslint-config.git"
   },
   "main": "index.js",
   "scripts": {
